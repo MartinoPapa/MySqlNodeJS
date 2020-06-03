@@ -7,11 +7,13 @@
 </head>
 
 <body>
-    <input type="txt" id="query" placeholder="insert query">
-    <button onclick="SendMessage(document.getElementById('query').value)">RUN</button>
+    <input type="txt" id="username" placeholder="username"><br>
+    <input type="psw" id="password" placeholder="password"><br>
+    <button onclick="Login()">Login</button><br><br>
+    <textarea rows = "10" cols = "80" name = "description" id="query">select * from clienti</textarea>
+    <br>
+    <button onclick="Query(document.getElementById('query').value)">RUN</button>
     <div id="container">
-
-
     </div>
 </body>
 
