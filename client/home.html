@@ -6,14 +6,23 @@
     <script src="connection.js"></script>
 </head>
 
+<style>
+    #queryForm{
+        display: none;
+    }
+</style>
+
 <body>
-    <input type="txt" id="username" placeholder="username"><br>
-    <input type="psw" id="password" placeholder="password"><br>
-    <button onclick="Login()">Login</button><br><br>
-    <textarea rows = "10" cols = "80" name = "description" id="query">select * from clienti</textarea>
-    <br>
-    <button onclick="Query(document.getElementById('query').value)">RUN</button>
-    <div id="container">
+    <div id="login">
+        <input type="txt" id="username" placeholder="username"><br>
+        <input type="psw" id="password" placeholder="password"><br>
+        <button onclick="Login()">Login</button><br><br>
+    </div>
+    <div id="queryForm">
+        <textarea rows="10" cols="80" name="description" id="query">select * from clienti</textarea>
+        <br>
+        <button onclick="Query(document.getElementById('query').value)">RUN</button>
+        <div id="container">
     </div>
 </body>
 

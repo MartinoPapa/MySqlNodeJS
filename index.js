@@ -35,11 +35,10 @@ function queryManager(msg, connection) {
         database: "videonoleggio",
         port: 1433
     });
-
-    SqlConnection.query(msg.query, function (err, result, fields) {
-        if (err) throw err;
-        SendMessage(msgType.query, true, JSON.stringify(result), connection)
-    });
+        SqlConnection.query(msg.query, function (err, result, fields) {
+            if (err) SendMessage(msgType.query, false, JSON.stringify(err), connection)
+            else SendMessage(msgType.query, true, JSON.stringify(result), connection)        
+        });   
 }
 
 function messageManager(msg, connection) {

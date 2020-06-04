@@ -17,13 +17,20 @@ ws.onmessage = function (e) {
     switch (msg.type) {
         case msgType.query:
             var data = JSON.parse(msg.data);
-            console.log(data)
+            if(msg.result){
+                console.log(data);
+            }
+            else{
+                console.warn(data.sqlMessage);
+            }
             break;
         case msgType.login:
             console.log(msg);
             if(msg.result){
                 login = true;
                 console.log("logged in!")
+                document.getElementById("login").style.display = "none";
+                document.getElementById("queryForm").style.display = "inline";
             }
             else{
                 login = false;
