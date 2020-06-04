@@ -26,8 +26,31 @@ wsServer.on('request', function (request) {
     });
 });
 
+function messageManager(msg, connection) {
+    switch (msg.type) {
+        case msgType.query:
+            queryManager(msg, function (err, data) {
+                if (err) {
+                    SendMessage(msgType.query, false, JSON.stringify(err), connection)
+                } else {
+                    SendMessage(msgType.query, true, JSON.stringify(data), connection)
+                }
+            });
+            break;
+        case msgType.login:
+            connectionManager(msg, function (err, data) {
+                if (err) {
+                    SendMessage(msgType.login, false, "", connection);
+                } else {
+                    SendMessage(msgType.login, true, "", connection);
+                }
+            });
+            break;
+    }
 
-function queryManager(msg, connection) {
+}
+
+function queryManager(msg, callback) {
     var SqlConnection = require('mysql').createConnection({
         host: "localhost",
         user: msg.username,
@@ -35,36 +58,27 @@ function queryManager(msg, connection) {
         database: "videonoleggio",
         port: 1433
     });
-        SqlConnection.query(msg.query, function (err, result, fields) {
-            if (err) SendMessage(msgType.query, false, JSON.stringify(err), connection)
-            else SendMessage(msgType.query, true, JSON.stringify(result), connection)        
-        });   
+    SqlConnection.query(msg.query, function (err, result, fields) {
+        if (err) callback(err, null);
+        else callback(null, result);
+    });
 }
 
-function messageManager(msg, connection) {
-    switch (msg.type) {
-        case msgType.query:
-            queryManager(msg, connection);
-            break;
-        case msgType.login:
-            var SqlConnection = require('mysql').createConnection({
-                host: "localhost",
-                user: msg.username,
-                password: msg.password,
-                database: "videonoleggio",
-                port: 1433
-            });
+function connectionManager(msg, callback) {
+    var SqlConnection = require('mysql').createConnection({
+        host: "localhost",
+        user: msg.username,
+        password: msg.password,
+        database: "videonoleggio",
+        port: 1433
+    });
 
-                SqlConnection.connect(function (err) {
-                    if (err) SendMessage(msgType.login, false, "", connection)
-                    else {
-                        console.log("Connected!");
-                        SendMessage(msgType.login, true, "", connection)
-                    }                  
-                });            
-            break;
-    }
+    SqlConnection.connect(function (err, result) {
+        if (err) callback(err, null);
+        else callback(null, result);
+    });
 
+    SqlConnection.end();
 }
 
 function SendMessage(type, result, data, connection) {
